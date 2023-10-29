@@ -18,6 +18,8 @@ class ContactForm extends Component {
   onSabmithandleChange = (e) => {
     e.preventDefault();
     this.props.onSubmit(this.state);
+    this.setState({  name: '',
+    number: '', });;
   };
 
   render() {
