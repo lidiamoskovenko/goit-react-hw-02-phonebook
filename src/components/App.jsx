@@ -21,7 +21,7 @@ export class App extends Component {
     if (savedContacts) {
       this.setState({ contacts: JSON.parse(savedContacts)});
     }
-    this.setState({ contacts: this.state.contacts });
+    // this.setState({ contacts: this.state.contacts });
   }
 
   componentDidUpdate(prevProps, prevState) {
