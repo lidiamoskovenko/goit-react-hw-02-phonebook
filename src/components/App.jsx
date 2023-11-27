@@ -16,6 +16,21 @@ export class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      this.setState({ contacts: JSON.parse(savedContacts)});
+    }
+    this.setState({ contacts: this.state.contacts });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
+
   onSubmitAddContact = ({ name, number }) => {
     const existingContact = this.state.contacts.find((contact) => contact.name.toLowerCase() === name.toLowerCase());
 
@@ -43,20 +58,21 @@ export class App extends Component {
       contacts: this.state.contacts.filter((contact) => contact.id !== contactId),
     });
   };
-
-  render() {
+  filterContacts = () => {
     const { contacts, filter } = this.state;
-    const filteredContacts = contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-
+    return contacts.filter(contact => {
+      return contact.name.toLowerCase().includes(filter.toLowerCase());
+    });}
+  render() {
+    const { filter } = this.state;
+    const contacts = filter ? this.filterContacts() : this.state.contacts;
     return (
       <div style={{ height: '100px', padding: '20px' }}>
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.onSubmitAddContact} />
         <h2>Contacts</h2>
         <Filter filter={filter} onChange={this.isFilterContact} />
-        <ContactList contacts={filteredContacts} handleDeleteContact={this.handleDeleteContact} />
+        <ContactList contacts={contacts} handleDeleteContact={this.handleDeleteContact} />
       </div>
     );
   }
